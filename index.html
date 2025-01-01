@@ -46,7 +46,33 @@
             <source src="video1.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <a href="video.mp4" target="_blank" class="download-btn" download>Download Video</a>
+        <a href="video1.mp4" class="download-btn">Download Video</a>
     </div>
+
+    <script>
+        document.querySelector('.download-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const videoUrl = this.getAttribute('href');
+            fetch(videoUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'video1.mp4';  // Force the correct filename
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                })
+                .catch(error => {
+                    console.error('Download error:', error);
+                    alert('Failed to download the video.');
+                });
+        });
+    </script>
 </body>
 </html>
